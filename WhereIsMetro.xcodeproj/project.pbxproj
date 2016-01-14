@@ -1,0 +1,552 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CE9A42D31C2EBEB600B8BE7A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9A42D21C2EBEB600B8BE7A /* MapKit.framework */; };
+		CE9A42D91C2EC8EC00B8BE7A /* metro-list.json in Resources */ = {isa = PBXBuildFile; fileRef = CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */; };
+		CE9A42DB1C2F0F4400B8BE7A /* metro-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */; };
+		CE9D8E811C209EBC001EEACC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E801C209EBC001EEACC /* main.m */; };
+		CE9D8E841C209EBC001EEACC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E831C209EBC001EEACC /* AppDelegate.m */; };
+		CE9D8E871C209EBC001EEACC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E861C209EBC001EEACC /* ViewController.m */; };
+		CE9D8E8A1C209EBC001EEACC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE9D8E881C209EBC001EEACC /* Main.storyboard */; };
+		CE9D8E8C1C209EBC001EEACC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE9D8E8B1C209EBC001EEACC /* Assets.xcassets */; };
+		CE9D8E8F1C209EBC001EEACC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE9D8E8D1C209EBC001EEACC /* LaunchScreen.storyboard */; };
+		CE9D8E9A1C209EBC001EEACC /* WhereIsMetroTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E991C209EBC001EEACC /* WhereIsMetroTests.m */; };
+		CE9D8EA51C209EBC001EEACC /* WhereIsMetroUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8EA41C209EBC001EEACC /* WhereIsMetroUITests.m */; };
+		CE9D8EB71C20E207001EEACC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9D8EB61C20E207001EEACC /* CoreLocation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE9D8E961C209EBC001EEACC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE9D8E741C209EBB001EEACC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE9D8E7B1C209EBB001EEACC;
+			remoteInfo = WhereIsMetro;
+		};
+		CE9D8EA11C209EBC001EEACC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE9D8E741C209EBB001EEACC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE9D8E7B1C209EBB001EEACC;
+			remoteInfo = WhereIsMetro;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CE9A42D21C2EBEB600B8BE7A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "metro-list.json"; sourceTree = "<group>"; };
+		CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "metro-logo.png"; sourceTree = "<group>"; };
+		CE9D8E7C1C209EBB001EEACC /* WhereIsMetro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereIsMetro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE9D8E801C209EBC001EEACC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CE9D8E821C209EBC001EEACC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CE9D8E831C209EBC001EEACC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CE9D8E851C209EBC001EEACC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CE9D8E861C209EBC001EEACC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CE9D8E891C209EBC001EEACC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CE9D8E8B1C209EBC001EEACC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CE9D8E8E1C209EBC001EEACC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CE9D8E901C209EBC001EEACC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE9D8E951C209EBC001EEACC /* WhereIsMetroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereIsMetroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE9D8E991C209EBC001EEACC /* WhereIsMetroTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhereIsMetroTests.m; sourceTree = "<group>"; };
+		CE9D8E9B1C209EBC001EEACC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE9D8EA01C209EBC001EEACC /* WhereIsMetroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhereIsMetroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE9D8EA41C209EBC001EEACC /* WhereIsMetroUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhereIsMetroUITests.m; sourceTree = "<group>"; };
+		CE9D8EA61C209EBC001EEACC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE9D8EB61C20E207001EEACC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE9D8E791C209EBB001EEACC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9A42D31C2EBEB600B8BE7A /* MapKit.framework in Frameworks */,
+				CE9D8EB71C20E207001EEACC /* CoreLocation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E921C209EBC001EEACC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E9D1C209EBC001EEACC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CE9D8E731C209EBB001EEACC = {
+			isa = PBXGroup;
+			children = (
+				CE9A42D21C2EBEB600B8BE7A /* MapKit.framework */,
+				CE9D8EB61C20E207001EEACC /* CoreLocation.framework */,
+				CE9D8E7E1C209EBB001EEACC /* WhereIsMetro */,
+				CE9D8E981C209EBC001EEACC /* WhereIsMetroTests */,
+				CE9D8EA31C209EBC001EEACC /* WhereIsMetroUITests */,
+				CE9D8E7D1C209EBB001EEACC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CE9D8E7D1C209EBB001EEACC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE9D8E7C1C209EBB001EEACC /* WhereIsMetro.app */,
+				CE9D8E951C209EBC001EEACC /* WhereIsMetroTests.xctest */,
+				CE9D8EA01C209EBC001EEACC /* WhereIsMetroUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE9D8E7E1C209EBB001EEACC /* WhereIsMetro */ = {
+			isa = PBXGroup;
+			children = (
+				CE9D8E821C209EBC001EEACC /* AppDelegate.h */,
+				CE9D8E831C209EBC001EEACC /* AppDelegate.m */,
+				CE9D8E851C209EBC001EEACC /* ViewController.h */,
+				CE9D8E861C209EBC001EEACC /* ViewController.m */,
+				CE9D8E881C209EBC001EEACC /* Main.storyboard */,
+				CE9D8E8B1C209EBC001EEACC /* Assets.xcassets */,
+				CE9D8E8D1C209EBC001EEACC /* LaunchScreen.storyboard */,
+				CE9D8E901C209EBC001EEACC /* Info.plist */,
+				CE9D8E7F1C209EBB001EEACC /* Supporting Files */,
+			);
+			path = WhereIsMetro;
+			sourceTree = "<group>";
+		};
+		CE9D8E7F1C209EBB001EEACC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */,
+				CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */,
+				CE9D8E801C209EBC001EEACC /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CE9D8E981C209EBC001EEACC /* WhereIsMetroTests */ = {
+			isa = PBXGroup;
+			children = (
+				CE9D8E991C209EBC001EEACC /* WhereIsMetroTests.m */,
+				CE9D8E9B1C209EBC001EEACC /* Info.plist */,
+			);
+			path = WhereIsMetroTests;
+			sourceTree = "<group>";
+		};
+		CE9D8EA31C209EBC001EEACC /* WhereIsMetroUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CE9D8EA41C209EBC001EEACC /* WhereIsMetroUITests.m */,
+				CE9D8EA61C209EBC001EEACC /* Info.plist */,
+			);
+			path = WhereIsMetroUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE9D8E7B1C209EBB001EEACC /* WhereIsMetro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE9D8EA91C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetro" */;
+			buildPhases = (
+				CE9D8E781C209EBB001EEACC /* Sources */,
+				CE9D8E791C209EBB001EEACC /* Frameworks */,
+				CE9D8E7A1C209EBB001EEACC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WhereIsMetro;
+			productName = WhereIsMetro;
+			productReference = CE9D8E7C1C209EBB001EEACC /* WhereIsMetro.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CE9D8E941C209EBC001EEACC /* WhereIsMetroTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE9D8EAC1C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetroTests" */;
+			buildPhases = (
+				CE9D8E911C209EBC001EEACC /* Sources */,
+				CE9D8E921C209EBC001EEACC /* Frameworks */,
+				CE9D8E931C209EBC001EEACC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE9D8E971C209EBC001EEACC /* PBXTargetDependency */,
+			);
+			name = WhereIsMetroTests;
+			productName = WhereIsMetroTests;
+			productReference = CE9D8E951C209EBC001EEACC /* WhereIsMetroTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CE9D8E9F1C209EBC001EEACC /* WhereIsMetroUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE9D8EAF1C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetroUITests" */;
+			buildPhases = (
+				CE9D8E9C1C209EBC001EEACC /* Sources */,
+				CE9D8E9D1C209EBC001EEACC /* Frameworks */,
+				CE9D8E9E1C209EBC001EEACC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE9D8EA21C209EBC001EEACC /* PBXTargetDependency */,
+			);
+			name = WhereIsMetroUITests;
+			productName = WhereIsMetroUITests;
+			productReference = CE9D8EA01C209EBC001EEACC /* WhereIsMetroUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE9D8E741C209EBB001EEACC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Ivan Tikhomirov";
+				TargetAttributes = {
+					CE9D8E7B1C209EBB001EEACC = {
+						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = A4KU6U9RKT;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					CE9D8E941C209EBC001EEACC = {
+						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = H5R3LL9D3S;
+						TestTargetID = CE9D8E7B1C209EBB001EEACC;
+					};
+					CE9D8E9F1C209EBC001EEACC = {
+						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = H5R3LL9D3S;
+						TestTargetID = CE9D8E7B1C209EBB001EEACC;
+					};
+				};
+			};
+			buildConfigurationList = CE9D8E771C209EBB001EEACC /* Build configuration list for PBXProject "WhereIsMetro" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CE9D8E731C209EBB001EEACC;
+			productRefGroup = CE9D8E7D1C209EBB001EEACC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE9D8E7B1C209EBB001EEACC /* WhereIsMetro */,
+				CE9D8E941C209EBC001EEACC /* WhereIsMetroTests */,
+				CE9D8E9F1C209EBC001EEACC /* WhereIsMetroUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE9D8E7A1C209EBB001EEACC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9D8E8F1C209EBC001EEACC /* LaunchScreen.storyboard in Resources */,
+				CE9D8E8C1C209EBC001EEACC /* Assets.xcassets in Resources */,
+				CE9A42DB1C2F0F4400B8BE7A /* metro-logo.png in Resources */,
+				CE9D8E8A1C209EBC001EEACC /* Main.storyboard in Resources */,
+				CE9A42D91C2EC8EC00B8BE7A /* metro-list.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E931C209EBC001EEACC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E9E1C209EBC001EEACC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE9D8E781C209EBB001EEACC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9D8E871C209EBC001EEACC /* ViewController.m in Sources */,
+				CE9D8E841C209EBC001EEACC /* AppDelegate.m in Sources */,
+				CE9D8E811C209EBC001EEACC /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E911C209EBC001EEACC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9D8E9A1C209EBC001EEACC /* WhereIsMetroTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE9D8E9C1C209EBC001EEACC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9D8EA51C209EBC001EEACC /* WhereIsMetroUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE9D8E971C209EBC001EEACC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE9D8E7B1C209EBB001EEACC /* WhereIsMetro */;
+			targetProxy = CE9D8E961C209EBC001EEACC /* PBXContainerItemProxy */;
+		};
+		CE9D8EA21C209EBC001EEACC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE9D8E7B1C209EBB001EEACC /* WhereIsMetro */;
+			targetProxy = CE9D8EA11C209EBC001EEACC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CE9D8E881C209EBC001EEACC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE9D8E891C209EBC001EEACC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		CE9D8E8D1C209EBC001EEACC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE9D8E8E1C209EBC001EEACC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CE9D8EA71C209EBC001EEACC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE9D8EA81C209EBC001EEACC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CE9D8EAA1C209EBC001EEACC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = WhereIsMetro/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetro";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CE9D8EAB1C209EBC001EEACC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = WhereIsMetro/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetro";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		CE9D8EAD1C209EBC001EEACC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = WhereIsMetroTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetroTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhereIsMetro.app/WhereIsMetro";
+			};
+			name = Debug;
+		};
+		CE9D8EAE1C209EBC001EEACC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = WhereIsMetroTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetroTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhereIsMetro.app/WhereIsMetro";
+			};
+			name = Release;
+		};
+		CE9D8EB01C209EBC001EEACC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = WhereIsMetroUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetroUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = WhereIsMetro;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		CE9D8EB11C209EBC001EEACC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = WhereIsMetroUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Ivan-Tikhomirov.WhereIsMetroUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = WhereIsMetro;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE9D8E771C209EBB001EEACC /* Build configuration list for PBXProject "WhereIsMetro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE9D8EA71C209EBC001EEACC /* Debug */,
+				CE9D8EA81C209EBC001EEACC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE9D8EA91C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE9D8EAA1C209EBC001EEACC /* Debug */,
+				CE9D8EAB1C209EBC001EEACC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE9D8EAC1C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetroTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE9D8EAD1C209EBC001EEACC /* Debug */,
+				CE9D8EAE1C209EBC001EEACC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE9D8EAF1C209EBC001EEACC /* Build configuration list for PBXNativeTarget "WhereIsMetroUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE9D8EB01C209EBC001EEACC /* Debug */,
+				CE9D8EB11C209EBC001EEACC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CE9D8E741C209EBB001EEACC /* Project object */;
+}
