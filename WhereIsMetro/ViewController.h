@@ -14,8 +14,9 @@
 
 @property (nonatomic, strong) MKMapView *mapView;
 @property (nonatomic, strong) NSArray *metroStations;
-@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSDictionary *currentClosestMetroStation;
+@property (nonatomic, strong) UIButton *currentLocationButton;
 
 
 @end

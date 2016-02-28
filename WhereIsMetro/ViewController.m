@@ -9,17 +9,20 @@
 #import "ViewController.h"
 
 #define DEGREES_RADIANS(angle) ((angle) / 180.0 * M_PI)
+#define PIN_SIZE_NORMAL 30
+#define PIN_SIZE_SMALL 10
+
 
 @interface ViewController ()
 
 @end
 
-bool trackingFirstTime = YES;
-bool mapDidLoadedFirstTIme = NO;
 MKPointAnnotation *closestMetroStationAnnotation;
 MKAnnotationView *userAnnotationView;
 UILabel *distanceToClosestStationLabel;
 double distanceToClosestStation = 10000000.0;
+double lastDirection = 0;
+
 
 @implementation ViewController
 
@@ -27,11 +30,19 @@ double distanceToClosestStation = 10000000.0;
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    [self fetchMetroStationsAsJSON];
+    
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.frame];
     self.mapView.delegate = self;
     
+    for (NSDictionary *metroStation in self.metroStations) {
+        [self.mapView addAnnotation:[self annotationForStation:metroStation]];
+    }
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
     
     self.currentClosestMetroStation = [[NSDictionary alloc] init];
     
@@ -52,18 +63,59 @@ double distanceToClosestStation = 10000000.0;
         //Person refused to give access to geoposition
     }
     
-    [self.view addSubview:self.mapView];
+    self.view.backgroundColor = [UIColor whiteColor];
     
+    self.view = self.mapView;
+    self.mapView.alpha = 0;
+    self.mapView.rotateEnabled = NO;
     
     NSUInteger labelHeight = 100;
     distanceToClosestStationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - labelHeight, self.view.frame.size.width, labelHeight)];
     distanceToClosestStationLabel.textAlignment = NSTextAlignmentCenter;
-    UIFont *distanceFont = [UIFont systemFontOfSize:41 weight:UIFontWeightLight];
+    UIFont *distanceFont = [UIFont systemFontOfSize:41 weight:-0.5];
     distanceToClosestStationLabel.font = distanceFont;
+    
+    UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(captureClosestStationRegion)];
+    [distanceToClosestStationLabel setUserInteractionEnabled:YES];
+    [distanceToClosestStationLabel addGestureRecognizer:gesture];
+    
+    distanceToClosestStationLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     [self.view addSubview:distanceToClosestStationLabel];
     
+    
+    //Adding currentLocationButton
+    NSInteger buttonSize = 44;
+    NSInteger buttonCornerRadius = 12;
+    self.currentLocationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.currentLocationButton.frame = CGRectMake(buttonCornerRadius, self.view.frame.size.height - buttonSize * 1.7 , buttonSize, buttonSize);
+    [self.currentLocationButton setImage:[UIImage imageNamed:@"user-icon.png"] forState:UIControlStateNormal];
+    self.currentLocationButton.imageEdgeInsets = UIEdgeInsetsMake(buttonCornerRadius, buttonCornerRadius, buttonCornerRadius, buttonCornerRadius);
+    self.currentLocationButton.backgroundColor = [UIColor whiteColor];
+    self.currentLocationButton.layer.cornerRadius = buttonCornerRadius;
+    
+    [self.currentLocationButton addTarget:self action:@selector(currentLocationButtonPressed:) forControlEvents:UIControlEventTouchDown];
+    [self.currentLocationButton addTarget:self action:@selector(currentLocationButtonReleased:) forControlEvents:UIControlEventTouchUpInside];
+    [self.currentLocationButton addTarget:self action:@selector(currentLocationButtonReleased:) forControlEvents:UIControlEventTouchUpOutside];
+
+    self.currentLocationButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    
+    [self.view addSubview:self.currentLocationButton];
+    [self.currentLocationButton setHidden:YES];
+    self.currentLocationButton.alpha = 0;
+    
 }
+
+- (void) currentLocationButtonPressed:(UIButton*)button {
+    button.transform = CGAffineTransformMakeScale(1.1, 1.1);
+}
+
+// Scale down on button release
+- (void) currentLocationButtonReleased:(UIButton*)button {
+    button.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    [self captureClosestStationRegion];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -100,13 +152,9 @@ double distanceToClosestStation = 10000000.0;
 
 - (double)getMinimalDistanceToMetro:(MKUserLocation *)userLocation{
     
-    double distance = 0;
-    
     CLLocation *userCoordinates = [[CLLocation alloc] initWithLatitude:
                                    self.mapView.userLocation.coordinate.latitude
                                                              longitude:self.mapView.userLocation.coordinate.longitude];
-    
-    
     
     if (self.metroStations != nil){
         
@@ -121,20 +169,58 @@ double distanceToClosestStation = 10000000.0;
             
             if (distanceToClosestStation > distance){
                 distanceToClosestStation = distance;
-                [self changeClosestStationTo:metroStation];
-            } else if ([self.currentClosestMetroStation isEqual:metroStation]){//getting away from nearest station, but not close enough for a different metro station
+                if (![self.currentClosestMetroStation isEqual:metroStation]){
+                    [self changeClosestStationTo:metroStation];
+                }
+            } else if ([self.currentClosestMetroStation isEqual:metroStation]){
                 distanceToClosestStation = distance;
             }
+
         }
+    } else{//self.metroStation == nil
+        return 0;
     }
     
-    return distance;
+    return distanceToClosestStation;
+}
+
+- (MKPointAnnotation *)annotationForStation:(NSDictionary *)station{
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
     
+    CLLocationDegrees latitude = [[station objectForKey:@"lat"] doubleValue];
+    CLLocationDegrees longitude = [[station objectForKey:@"lng"] doubleValue];
+    NSString *name = [station objectForKey:@"name"];
+    
+    point.coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+    
+    point.title = [self parseStationName:name];
+    point.subtitle = [self parseLineName:name];
+    
+    return point;
 }
 
 - (void)changeClosestStationTo:(NSDictionary *)station{
     
     self.currentClosestMetroStation = [NSDictionary dictionaryWithDictionary:station];
+    
+    //changing closestMetroStationAnnotation
+    
+    closestMetroStationAnnotation = [self annotationForStation:station];
+    
+    //changing mapView region — capturing the rect with a person and a station
+    
+    [self captureClosestStationRegion];
+
+}
+
+- (void)captureClosestStationRegion{
+    
+    //initial check for fade in
+    if (self.mapView.alpha == 0){
+        [UIView animateWithDuration:0.3 animations:^{
+            self.mapView.alpha = 1;
+        }];
+    }
     
     MKMapPoint userPoint = MKMapPointForCoordinate(self.mapView.userLocation.coordinate);
     
@@ -142,8 +228,7 @@ double distanceToClosestStation = 10000000.0;
     
     MKMapRect zoomRect = MKMapRectMake(userPoint.x, userPoint.y, pointOffset, pointOffset);
     
-    
-    MKMapPoint closestMetroStationPoint = MKMapPointForCoordinate(CLLocationCoordinate2DMake([[station objectForKey:@"lat"] doubleValue], [[station objectForKey:@"lng"] doubleValue]));
+    MKMapPoint closestMetroStationPoint = MKMapPointForCoordinate(CLLocationCoordinate2DMake([[self.currentClosestMetroStation objectForKey:@"lat"] doubleValue], [[self.currentClosestMetroStation objectForKey:@"lng"] doubleValue]));
     MKMapRect pointRect = MKMapRectMake(closestMetroStationPoint.x, closestMetroStationPoint.y, pointOffset, pointOffset);
     zoomRect = MKMapRectUnion(zoomRect, pointRect);
     
@@ -151,100 +236,85 @@ double distanceToClosestStation = 10000000.0;
     UIEdgeInsets insets = UIEdgeInsetsMake(inset, inset, inset * 2, inset);
     [self.mapView setVisibleMapRect:[self.mapView mapRectThatFits:zoomRect edgePadding:insets] animated:NO];
     
+    //poping up the callout view
+    
+    for (id<MKAnnotation> currentAnnotation in self.mapView.annotations) {
+        MKPointAnnotation* annotation = currentAnnotation;
+        if ([annotation.title isEqual:closestMetroStationAnnotation.title]){
+            [self.mapView selectAnnotation:currentAnnotation animated:YES];
+        }
+    }
+    
 }
 
+
+- (UIImage *)imageWithSize:(CGSize)size image:(UIImage *)image{
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+    
+}
+
+
+- (NSUInteger)zoomLevelForMapRect:(MKMapRect)mRect withMapViewSizeInPixels:(CGSize)viewSizeInPixels
+{
+    NSInteger MAXIMUM_ZOOM = 20;
+    NSUInteger zoomLevel = MAXIMUM_ZOOM; // MAXIMUM_ZOOM is 20 with MapKit
+    MKZoomScale zoomScale = mRect.size.width / viewSizeInPixels.width; //MKZoomScale is just a CGFloat typedef
+    double zoomExponent = log2(zoomScale);
+    zoomLevel = (NSUInteger)(MAXIMUM_ZOOM - ceil(zoomExponent));
+    return zoomLevel;
+}
 
 #pragma mark MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    
-    CLLocation *userCoordinates = [[CLLocation alloc] initWithLatitude:
-                                   self.mapView.userLocation.coordinate.latitude
-                                                             longitude:self.mapView.userLocation.coordinate.longitude];
-    
-    if (trackingFirstTime){
-        
-        trackingFirstTime = NO;
 
-        [self fetchMetroStationsAsJSON];
-        
-        NSDictionary *closestMetroStation = [[NSDictionary alloc] init];
-        CLLocationDistance distanceToClosest = 100000000.0;
-        
-        for (NSDictionary *metroStation in self.metroStations) {
-            CLLocationDegrees latitude = [[metroStation objectForKey:@"lat"] doubleValue];
-            CLLocationDegrees longitude = [[metroStation objectForKey:@"lng"] doubleValue];
-            NSString *name = [metroStation objectForKey:@"name"];
-            
-            
-            MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-            point.coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-            
-            point.title = [self parseStationName:name];
-            point.subtitle = [self parseLineName:name];
-            
-            [mapView addAnnotation:point];
-            
-            CLLocation *stationLocation = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-            
-            CLLocationDistance distance = [userCoordinates distanceFromLocation:stationLocation];
-            
-            if (distanceToClosest > distance){
-                distanceToClosest = distance;
-                distanceToClosestStation = distance;
-                closestMetroStation = [NSDictionary dictionaryWithDictionary:metroStation];
-                self.currentClosestMetroStation = [NSDictionary dictionaryWithDictionary:closestMetroStation];
-                closestMetroStationAnnotation = point;
-            }
-        }
-        
-        MKMapPoint userPoint = MKMapPointForCoordinate(mapView.userLocation.coordinate);
-        
-        double pointOffset = 0.5;
-        
-        MKMapRect zoomRect = MKMapRectMake(userPoint.x, userPoint.y, pointOffset, pointOffset);
-        
-        
-        MKMapPoint closestMetroStationPoint = MKMapPointForCoordinate(CLLocationCoordinate2DMake([[closestMetroStation objectForKey:@"lat"] doubleValue], [[closestMetroStation objectForKey:@"lng"] doubleValue]));
-        MKMapRect pointRect = MKMapRectMake(closestMetroStationPoint.x, closestMetroStationPoint.y, pointOffset, pointOffset);
-        zoomRect = MKMapRectUnion(zoomRect, pointRect);
-        
-        NSUInteger inset = 50;
-        UIEdgeInsets insets = UIEdgeInsetsMake(inset, inset, inset * 2, inset);
-        [mapView setVisibleMapRect:[self.mapView mapRectThatFits:zoomRect edgePadding:insets] animated:NO];
-        
-        return;
-    }
-    
-    for (NSDictionary *metroStation in self.metroStations) {
-        CLLocationDegrees latitude = [[metroStation objectForKey:@"lat"] doubleValue];
-        CLLocationDegrees longitude = [[metroStation objectForKey:@"lng"] doubleValue];
-        
-        CLLocation *stationLocation = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-        
-        CLLocationDistance distance = [userCoordinates distanceFromLocation:stationLocation];
-        
-        if (distanceToClosestStation > distance){
-            distanceToClosestStation = distance;
-            self.currentClosestMetroStation = [NSDictionary dictionaryWithDictionary:metroStation];
-        }
-    }
-    
-    distanceToClosestStationLabel.text = [NSString stringWithFormat:@"%1.0f м.", distanceToClosestStation];
+    distanceToClosestStationLabel.text = [NSString stringWithFormat:@"%1.0f м", [self getMinimalDistanceToMetro:userLocation]];
     
 }
 
-- (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView{
-    if (!mapDidLoadedFirstTIme){
-        mapDidLoadedFirstTIme = YES;
-        for (id<MKAnnotation> currentAnnotation in mapView.annotations) {
-            if ([currentAnnotation isEqual:closestMetroStationAnnotation]) {
-                [mapView selectAnnotation:currentAnnotation animated:YES];
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    
+    MKMapRect visibleMapRect = mapView.visibleMapRect;
+    NSSet *visibleAnnotations = [mapView annotationsInMapRect:visibleMapRect];
+    if ([visibleAnnotations containsObject:mapView.userLocation]) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.currentLocationButton.alpha = 0;
+        } completion: ^(BOOL finished){
+            self.currentLocationButton.hidden = finished;
+        }];
+    } else {//userLocation is not visible
+        self.currentLocationButton.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.currentLocationButton.alpha = 1;
+        }];
+    }
+    
+    //if zoomlvl is pretty high, we change M signs to small dots
+    
+    NSUInteger zoomLevel = [self zoomLevelForMapRect:mapView.visibleMapRect withMapViewSizeInPixels:mapView.frame.size];
+    
+    if (zoomLevel <= 11){
+        for (id <MKAnnotation> annotation in mapView.annotations){
+            MKAnnotationView* annotationView = [mapView viewForAnnotation:annotation];
+            if (annotation != mapView.userLocation) {
+                annotationView.image = [self imageWithSize:CGSizeMake(PIN_SIZE_SMALL, PIN_SIZE_SMALL) image:[UIImage imageNamed:@"metro-sign.png"]];
+            }
+        }
+    } else {// normal zoomLevel
+        for (id <MKAnnotation> annotation in mapView.annotations){
+            MKAnnotationView* annotationView = [mapView viewForAnnotation:annotation];
+            if (annotation != mapView.userLocation) {
+                annotationView.image = [self imageWithSize:CGSizeMake(PIN_SIZE_NORMAL, PIN_SIZE_NORMAL) image:[UIImage imageNamed:@"metro-sign.png"]];
             }
         }
     }
 }
-
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
@@ -256,8 +326,9 @@ double distanceToClosestStation = 10000000.0;
         if ( pinView == nil ){
             pinView = [[MKAnnotationView alloc]
                        initWithAnnotation:annotation reuseIdentifier:defaultPinID];
-        pinView.canShowCallout = YES;
-        pinView.image = [UIImage imageNamed:@"metro-logo.png"];
+            pinView.canShowCallout = YES;
+            
+            pinView.image = [self imageWithSize:CGSizeMake(PIN_SIZE_NORMAL, PIN_SIZE_NORMAL) image:[UIImage imageNamed:@"metro-sign.png"]];
         }
     }
     else if ([annotation isEqual:closestMetroStationAnnotation]){
@@ -269,7 +340,7 @@ double distanceToClosestStation = 10000000.0;
                        initWithAnnotation:annotation reuseIdentifier:closestPinID];
             pinView.canShowCallout = YES;
             //TO-DO — image for closest station
-            pinView.image = [UIImage imageNamed:@"metro-logo.png"];
+            pinView.image = [self imageWithSize:CGSizeMake(PIN_SIZE_NORMAL, PIN_SIZE_NORMAL) image:[UIImage imageNamed:@"metro-sign.png"]];
         }
     }
     else{
@@ -280,29 +351,41 @@ double distanceToClosestStation = 10000000.0;
             pinView = [[MKAnnotationView alloc]
                        initWithAnnotation:annotation reuseIdentifier:userPinID];
             pinView.canShowCallout = YES;
-            //TO-DO — image compass for user
-            pinView.image = [UIImage imageNamed:@"metro-logo.png"];
+            
+            UIImage *userImage = [UIImage imageNamed:@"user-icon.png"];
+            CGSize newSize = CGSizeMake(PIN_SIZE_NORMAL, PIN_SIZE_NORMAL);
+            
+            pinView.image = [self imageWithSize:newSize image:userImage];
             [pinView setTransform:CGAffineTransformMakeRotation(.001)];
         }
     }
     return pinView;
 }
 
+
 #pragma mark CCLocationManagerDelegate methods
 
+//rotating the head of user compas with device turn
 -(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading {
     CLLocationDirection direction = newHeading.magneticHeading;
+    if(direction < 0){
+        direction = -direction;
+    } else {
+        direction = 180 + direction;
+    }
     for (id <MKAnnotation> currentAnnotation in self.mapView.annotations) {
         if (currentAnnotation == self.mapView.userLocation) {
+            
+            self.mapView.userLocation.title = @"Вы здесь";
+            
             MKAnnotationView* annotationView = [self.mapView viewForAnnotation:currentAnnotation];
             
-            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                
+            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 [annotationView setTransform:CGAffineTransformMakeRotation(DEGREES_RADIANS(direction))];
             } completion:nil];
-//            [annotationView setTransform:CGAffineTransformMakeRotation(DEGREES_RADIANS(direction))];
         }
     }
 }
+
 
 @end

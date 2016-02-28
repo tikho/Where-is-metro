@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE54A1551C67AB80002077EC /* metro-sign.png in Resources */ = {isa = PBXBuildFile; fileRef = CE54A1531C67AB80002077EC /* metro-sign.png */; };
+		CE54A1561C67AB80002077EC /* user-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CE54A1541C67AB80002077EC /* user-icon.png */; };
 		CE9A42D31C2EBEB600B8BE7A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE9A42D21C2EBEB600B8BE7A /* MapKit.framework */; };
 		CE9A42D91C2EC8EC00B8BE7A /* metro-list.json in Resources */ = {isa = PBXBuildFile; fileRef = CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */; };
-		CE9A42DB1C2F0F4400B8BE7A /* metro-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */; };
 		CE9D8E811C209EBC001EEACC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E801C209EBC001EEACC /* main.m */; };
 		CE9D8E841C209EBC001EEACC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E831C209EBC001EEACC /* AppDelegate.m */; };
 		CE9D8E871C209EBC001EEACC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9D8E861C209EBC001EEACC /* ViewController.m */; };
@@ -39,9 +40,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE54A1531C67AB80002077EC /* metro-sign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "metro-sign.png"; sourceTree = "<group>"; };
+		CE54A1541C67AB80002077EC /* user-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user-icon.png"; sourceTree = "<group>"; };
 		CE9A42D21C2EBEB600B8BE7A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "metro-list.json"; sourceTree = "<group>"; };
-		CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "metro-logo.png"; sourceTree = "<group>"; };
 		CE9D8E7C1C209EBB001EEACC /* WhereIsMetro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereIsMetro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9D8E801C209EBC001EEACC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE9D8E821C209EBC001EEACC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -129,7 +131,8 @@
 		CE9D8E7F1C209EBB001EEACC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CE9A42DA1C2F0F4300B8BE7A /* metro-logo.png */,
+				CE54A1531C67AB80002077EC /* metro-sign.png */,
+				CE54A1541C67AB80002077EC /* user-icon.png */,
 				CE9A42D81C2EC8EC00B8BE7A /* metro-list.json */,
 				CE9D8E801C209EBC001EEACC /* main.m */,
 			);
@@ -265,11 +268,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE54A1551C67AB80002077EC /* metro-sign.png in Resources */,
 				CE9D8E8F1C209EBC001EEACC /* LaunchScreen.storyboard in Resources */,
 				CE9D8E8C1C209EBC001EEACC /* Assets.xcassets in Resources */,
-				CE9A42DB1C2F0F4400B8BE7A /* metro-logo.png in Resources */,
 				CE9D8E8A1C209EBC001EEACC /* Main.storyboard in Resources */,
 				CE9A42D91C2EC8EC00B8BE7A /* metro-list.json in Resources */,
+				CE54A1561C67AB80002077EC /* user-icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
