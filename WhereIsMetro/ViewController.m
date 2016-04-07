@@ -21,7 +21,9 @@ MKPointAnnotation *closestMetroStationAnnotation;
 MKAnnotationView *userAnnotationView;
 UILabel *distanceToClosestStationLabel;
 double distanceToClosestStation = 10000000.0;
-double lastDirection = 0;
+double userDegrees = 0;
+BOOL initialZoomCheck = YES;
+float GeoAngle = 0;
 
 
 @implementation ViewController
@@ -41,31 +43,20 @@ double lastDirection = 0;
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+//    self.locationManager.distanceFilter = 10;
+    
+    [self.locationManager startUpdatingHeading];
+//    self.locationManager.headingOrientation = CLDeviceOrientationPortrait;
+    self.locationManager.headingFilter = 5;
+    [self.locationManager startUpdatingLocation];
+    
+    [self startTrackingLocation];
     
     self.currentClosestMetroStation = [[NSDictionary alloc] init];
     
-    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-    
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    
-    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        
-        [self.locationManager startUpdatingHeading];
-        [self.locationManager startUpdatingLocation];
-        self.mapView.showsUserLocation = YES;
-    } else{
-        //Person refused to give access to geoposition
-    }
-    
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.view = self.mapView;
+    [self.view addSubview:self.mapView];
     self.mapView.alpha = 0;
     self.mapView.rotateEnabled = NO;
     
@@ -259,6 +250,45 @@ double lastDirection = 0;
     
 }
 
+- (void)startTrackingLocation{
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status == kCLAuthorizationStatusNotDetermined){
+        return;
+    }else if (status == kCLAuthorizationStatusDenied){
+        [self handleLocationDeniedStatus];
+    }
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        // Send the user to the Settings for this app
+        NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        [[UIApplication sharedApplication] openURL:settingsURL];
+        [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    }
+}
+
+- (void)handleLocationDeniedStatus{
+    
+    NSString *title = @"Location services are not enabled";
+    NSString *message = @"Enable location services in settings. Without it app is useless";
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Settings", nil];
+    [alertView show];
+}
+
+
+
 
 - (NSUInteger)zoomLevelForMapRect:(MKMapRect)mRect withMapViewSizeInPixels:(CGSize)viewSizeInPixels
 {
@@ -273,8 +303,10 @@ double lastDirection = 0;
 #pragma mark MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-
+    
     distanceToClosestStationLabel.text = [NSString stringWithFormat:@"%1.0f м", [self getMinimalDistanceToMetro:userLocation]];
+    
+    GeoAngle = [self setLatLonForDistanceAndAngle:userLocation.location];
     
 }
 
@@ -288,7 +320,7 @@ double lastDirection = 0;
         } completion: ^(BOOL finished){
             self.currentLocationButton.hidden = finished;
         }];
-    } else {//userLocation is not visible
+    } else if (closestMetroStationAnnotation != nil){//userLocation is not visible
         self.currentLocationButton.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             self.currentLocationButton.alpha = 1;
@@ -356,10 +388,30 @@ double lastDirection = 0;
             CGSize newSize = CGSizeMake(PIN_SIZE_NORMAL, PIN_SIZE_NORMAL);
             
             pinView.image = [self imageWithSize:newSize image:userImage];
-            [pinView setTransform:CGAffineTransformMakeRotation(.001)];
+            [pinView setTransform:CGAffineTransformMakeRotation(-.001)];
         }
     }
     return pinView;
+}
+
+-(float)setLatLonForDistanceAndAngle:(CLLocation *)userlocation
+{
+    float lat1 = DEGREES_RADIANS(userlocation.coordinate.latitude);
+    float lon1 = DEGREES_RADIANS(userlocation.coordinate.longitude);
+    
+    float lat2 = DEGREES_RADIANS(closestMetroStationAnnotation.coordinate.latitude);
+    float lon2 = DEGREES_RADIANS(closestMetroStationAnnotation.coordinate.longitude);
+    
+    float dLon = lon2 - lon1;
+    
+    float y = sin(dLon) * cos(lat2);
+    float x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
+    float radiansBearing = atan2(y, x);
+    if(radiansBearing < 0.0){
+        radiansBearing += 2*M_PI;
+    }
+    
+    return radiansBearing;
 }
 
 
@@ -367,25 +419,56 @@ double lastDirection = 0;
 
 //rotating the head of user compas with device turn
 -(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading {
-    CLLocationDirection direction = newHeading.magneticHeading;
-    if(direction < 0){
-        direction = -direction;
-    } else {
-        direction = 180 + direction;
+//    NSTimeInterval age = -[newHeading.timestamp timeIntervalSinceNow];
+//    if (age > 120){
+//        return;
+//    }
+//    if (newHeading.headingAccuracy < 0)
+//        return;
+    
+    // Use the true heading if it is valid.
+
+    if (newHeading.trueHeading < 0){
+        return;
     }
-    for (id <MKAnnotation> currentAnnotation in self.mapView.annotations) {
+    
+    CLLocationDirection direction = newHeading.trueHeading + 180; // + 180 to rotate user icon. It is heading to the bottom by default
+        for (id <MKAnnotation> currentAnnotation in self.mapView.annotations) {
         if (currentAnnotation == self.mapView.userLocation) {
             
             self.mapView.userLocation.title = @"Вы здесь";
             
             MKAnnotationView* annotationView = [self.mapView viewForAnnotation:currentAnnotation];
             
-            [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//                [annotationView setTransform:CGAffineTransformMakeRotation(DEGREES_RADIANS(direction + 45) + GeoAngle)];
                 [annotationView setTransform:CGAffineTransformMakeRotation(DEGREES_RADIANS(direction))];
             } completion:nil];
+
         }
     }
 }
 
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
+        status == kCLAuthorizationStatusAuthorized) {
+        
+        self.mapView.showsUserLocation = YES;
+        
+    } else{
+        //Person refused to give access to geoposition
+        self.mapView.showsUserLocation = NO;
+        if (self.mapView.alpha == 0){
+            [UIView animateWithDuration:0.3 animations:^{
+                self.mapView.alpha = 1;
+            }];
+        }
+        self.mapView.centerCoordinate = CLLocationCoordinate2DMake(55.7522222, 37.6155556);//Moscow center
+        MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, 12000, 12000);//showing overview of Moscow
+        MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
+        [self.mapView setRegion:adjustedRegion animated:YES];
+        
+    }
+}
 
 @end
